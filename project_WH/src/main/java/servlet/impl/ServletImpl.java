@@ -14,11 +14,15 @@ import servlet.service.ServletService;
 public class ServletImpl extends EgovAbstractServiceImpl implements ServletService{
 	
 	@Resource(name="ServletDAO")
-	private ServletDAO dao;
+	private ServletDAO servletDao;
+
+	@Resource(name="LayerDAO")
+	private LayerDAO layerDao;
 	
 	@Override
 	public String addStringTest(String str) throws Exception {
-		List<EgovMap> mediaType = dao.selectAll();
+		List<EgovMap> mediaType = servletDao.selectAll();
 		return str + " -> testImpl ";
 	}
+	
 }

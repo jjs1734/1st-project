@@ -12,4 +12,51 @@
 				1=1
 		]]>
 	</select>
+	
+	<!-- <select id="sd" resultType="Map">
+	select sd_nm, sd_cd, ARRAY[ST_XMin(ST_Envelope(ST_Transform(geom::geometry, 4326))),
+    ST_YMin(ST_Envelope(ST_Transform(geom::geometry, 4326))),
+    ST_XMax(ST_Envelope(ST_Transform(geom::geometry, 4326))),
+    ST_YMax(ST_Envelope(ST_Transform(geom::geometry, 4326)))
+	] AS sd_bbox 
+	from tl_sd 
+	order by sd_cd
+	</select>  -->
+	
+	<select id="sd" resultType="Map">
+	select sd_nm, sd_cd, ST_X(ST_Transform(ST_Centroid(geom), 4326)) AS sd_x, ST_Y(ST_Transform(ST_Centroid(geom), 4326)) AS sd_y, FLOOR(ST_Area(ST_Transform(geom, 4326)) * 10000) AS sd_area
+	from tl_sd 
+	order by sd_cd
+	</select>
+	
+	<select id="sgg" parameterType="String" resultType="Map">
+		SELECT REPLACE(sgg_nm, #{sd}, '') AS sgg_nm, sgg_cd,  ST_X(ST_Transform(ST_Centroid(geom), 4326)) AS sgg_x, ST_Y(ST_Transform(ST_Centroid(geom), 4326)) AS sgg_y,
+		FLOOR(ST_Area(ST_Transform(geom, 4326)) * 10000) AS sgg_area
+   		FROM tl_sgg
+    	WHERE sgg_nm LIKE CONCAT(#{sd}, '%') AND geom IS NOT NULL
+    	order by sgg_nm
+	</select>
+
+	<select id="bjd" parameterType="String" resultType="Map">
+		SELECT bjd_nm, bjd_cd, ST_X(ST_Transform(ST_Centroid(geom), 4326)) AS bjd_x, ST_Y(ST_Transform(ST_Centroid(geom), 4326)) AS bjd_y, FLOOR(ST_Area(ST_Transform(geom, 4326)) * 10000) AS bjd_area
+   		FROM tl_bjd
+    	WHERE sgg_cd = #{sgg}
+	</select>
+	
+	<select id="ele" parameterType="String" resultType="Integer">
+		SELECT total_usage
+		FROM e5_202204
+		WHERE bjd_cd = #{bjdCd}
+	</select>
+	
+	<select id="sdChartData" resultType="Map">
+		SELECT sd_cd, sd_nm, totalusage
+		FROM a5sdview
+	</select>
+
+	<select id="sggChartData" parameterType="String" resultType="Map">
+		SELECT sgg_nm, totalusage
+		FROM a5sggview
+		WHERE sd_cd = #{sd}
+	</select>
 </mapper>

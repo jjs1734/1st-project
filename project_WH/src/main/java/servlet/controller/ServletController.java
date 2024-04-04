@@ -1,25 +1,21 @@
 package servlet.controller;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import servlet.service.ServletService;
 
 @Controller
 public class ServletController {
-	@Resource(name = "ServletService")
+	
+	@Autowired
 	private ServletService servletService;
 	
-	@RequestMapping(value = "/main.do")
-	public String mainTest(ModelMap model) throws Exception {
-		System.out.println("sevController.java - mainTest()");
+	@RequestMapping("/test.do")
+	public String index() {
 		
-		String str = servletService.addStringTest("START! ");
-		model.addAttribute("resultStr", str);
-		
-		return "main/main";
+		return "main/test";
 	}
+	
 }
