@@ -50,7 +50,7 @@ let overlay;
 		var option = {
 				height: 400,
 				hAxis: {
-		            title: '전력 사용량 (단위 : KWh)',
+		            title: '전력 사용량 (단위 : kWh)',
 		            textStyle: {
 		                color: '#000000',
 		                fontSize: 13,
@@ -68,7 +68,7 @@ let overlay;
 		                color: '#000000',
 		                fontSize: 13
 		            },
-		            titleTextStyle: {
+		            titleTextStyle: { 
 		                color: '#000000',
 		                fontSize: 15,
 		                bold: true
@@ -77,7 +77,7 @@ let overlay;
 		        colors: ['#368AFF'],
 		        backgroundColor: '#FFFFFF',
 		        chartArea: {
-		            width: '60%',
+		            width: '50%',
 		            height: '80%'
 		        },
 		        legend: { position: 'none' }
@@ -89,7 +89,7 @@ let overlay;
 	function drawTableChart(chartData, chartValue) {
 	    var data = new google.visualization.DataTable();
 	    data.addColumn('string', '지역');
-	    data.addColumn('number', '전력 사용량 (단위 : KWh)');
+	    data.addColumn('number', '전력 사용량 (단위 : kWh)');
 	    
 	 
 	    	
@@ -422,7 +422,7 @@ $('#bjdSelect').change(function(){
 			    overlayElement.style.opacity = '0.7'; // 배경 투명도 설정 (0 완전 투명 ~ 1 완전 불투명)
 			    
 			    overlayElement.innerHTML = bjdText + '의 전력 사용량은 ' + ele + 'KWh 입니다'; // 오버레이에 표시될 내용
-			    var overlay = new ol.Overlay({
+			    overlay = new ol.Overlay({
 			        element: overlayElement,
 			        position: ol.proj.fromLonLat([bjdX, bjdY]),
 			        positioning: 'bottom-center'
