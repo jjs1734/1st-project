@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="servlet">
+
+	<select id="serVletTest" resultType="EgovMap">
+		<![CDATA[
+			SELECT FILENAME, FILEREALNAME
+			FROM UPLOAD
+			WHERE 1=1
+		]]>
+	</select>
+
+	<select id="sidonm" resultType="Map">
+		SELECT sd_nm, sd_cd, 
+		ST_AsText(ST_Transform(ST_Centroid(geom), 4326)) AS geom 
+		FROM tl_sd;
+	</select>
+
+	<select id="sggnm" resultType="Map" parameterType="String">
+      SELECT REPLACE(sgg_nm, CONCAT(sd_nm, ' '), '') AS sgg_nm, sgg_cd, 
+      			ST_AsText(ST_Transform(ST_Centroid(geom), 4326)) AS geom
+      FROM tl_sgg WHERE sgg_nm LIKE CONCAT(#{sido}, '%') 
+	</select>
+
+
+	<select id="bjdnm" resultType="Map" parameterType="String">
+		SELECT DISTINCT b.bjd_nm, b.bjd_cd, 
+				ST_AsText(ST_Transform(ST_Centroid(b.geom), 4326)) AS geom 
+		FROM tl_bjd b
+		JOIN tl_sgg c ON b.sgg_cd = c.sgg_cd
+		WHERE c.sgg_cd = #{sgg};
+	</select>
+	
+	<insert id="fileUp" parameterType="list">
+        <foreach collection="list" item="item" index="index" separator=";">
+        INSERT INTO hyeon (sd_nm, bjd_cd, usage)  
+        VALUES (#{item.sd_nm}, #{item.bjd_cd}, #{item.usage})
+      	</foreach>
+   </insert>
+   
+   <delete id="clearData">
+   		DELETE FROM hyeon;
+   </delete>
+   
+	<select id="usagelist" resultType="Map">
+		SELECT sd_nm, sd_cd, totalusage 
+		FROM hyeonsdview;
+	</select>
+	
+	<select id="usagelistsgg" resultType="Map" parameterType="String">
+		SELECT sgg_nm, sd_cd, usage 
+		FROM hyeonview3view 
+		WHERE sd_cd = #{sdcd};
+	</select>
+</mapper>
